@@ -2,10 +2,12 @@ import SafePermissions
 import requests
 from getpass import getpass
 
-LogonUrl = 'https://PvwaBaseURL/PasswordVault/WebServices/auth/Cyberark/CyberArkAuthenticationService.svc/Logon'
-SafeCreationUrl = 'https://PvwaBaseURL/PasswordVault/WebServices/PIMServices.svc/Safes'
-AddSafeMemberUrl = 'https://PvwaBaseURL/PasswordVault/WebServices/PIMServices.svc/Safes/Members'
-Logoffurl = 'https://PvwaBaseURL/PasswordVault/WebServices/auth/Cyberark/CyberArkAuthenticationService.svc/Logoff'
+PVWABaseURL = "pvwabaseURL"
+
+LogonUrl = 'https://%s/PasswordVault/WebServices/auth/Cyberark/CyberArkAuthenticationService.svc/Logon' % PVWABaseURL
+SafeCreationUrl = 'https://%s/PasswordVault/WebServices/PIMServices.svc/Safes' % PVWABaseURL
+AddSafeMemberUrl = 'https://%s/PasswordVault/WebServices/PIMServices.svc/Safes/Members' % PVWABaseURL
+Logoffurl = 'https://%s/PasswordVault/WebServices/auth/Cyberark/CyberArkAuthenticationService.svc/Logoff' % PVWABaseURL
 
 PayLoad = {}
 
@@ -39,8 +41,8 @@ with open("SafeList_SI.txt") as SafeList:
         AdministratorResponse = requests.request('POST', (AddSafeMemberUrl[:-7]+line[0]+AddSafeMemberUrl[-8:]), headers=Tokenheaders, data=SafePermissions.SafeMember("Administrator"), allow_redirects=False, verify=True)
         print("Adding Administrator  on safe '%s' : HTTP" % line[0], AdministratorResponse)
 
-        LDAPUser_GroupResponse = requests.request('POST', (AddSafeMemberUrl[:-7]+line[0]+AddSafeMemberUrl[-8:]), headers=Tokenheaders, data=SafePermissions.ADMember(line[1]), allow_redirects=False, verify=True)
-        print("Adding A9 user '%s' on safe '%s' : HTTP" % (line[1], line[0]), LDAPUser_GroupResponse)
+        A9IdResponse = requests.request('POST', (AddSafeMemberUrl[:-7]+line[0]+AddSafeMemberUrl[-8:]), headers=Tokenheaders, data=SafePermissions.ADMember(line[1]), allow_redirects=False, verify=True)
+        print("Adding A9 user '%s' on safe '%s' : HTTP" % (line[1], line[0]), A9IdResponse)
 
 #STEP:4     REMOVE THE SAFE_MEMBERSHIP OF THE VAULT USER, THAT WAS USED TO THE CREATE  THE SAFES.
 
